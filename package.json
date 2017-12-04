@@ -1,0 +1,21 @@
+{
+  "name": "node-sspi-win32",
+  "version": "0.0.1",
+  "description": "node.js for SSPI in NTLM Proxy authentication ",
+  "main": "test.js",
+  "scripts": {
+    "test": "node_modules/.bin/jasmine",
+    "install": "node-gyp rebuild"
+  },
+  "author": "",
+  "license": "ISC",
+  "gypfile": true,
+  "devDependencies": {
+    "express": "^4.15.3",
+    "jasmine": "^2.5.3",
+    "xmldom": "^0.1.27",
+    "xpath": "0.0.23"
+  },
+  "publishConfig": {
+  }
+}
