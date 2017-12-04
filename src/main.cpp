@@ -116,9 +116,8 @@ namespace node_sspi_win32
 		}
 	}
 
-	void generate_type1_message(const FunctionCallbackInfo<Value>& args)
+	void generate_type1_message(const Nan::FunctionCallbackInfo<v8::Value> &args)
 	{
-		Isolate* isolate = args.GetIsolate();
 		CredHandle credHandle;
 		TimeStamp expiry;
 		SECURITY_STATUS result = sspi_module.functable->AcquireCredentialsHandleA(NULL,
@@ -132,7 +131,9 @@ namespace node_sspi_win32
 			&expiry);
 		if (result != SEC_E_OK)
 		{
-			isolate->ThrowException( String::NewFromUtf8(isolate, "Can not aquire credentials hanlde") );
+			stringstream msg;
+			msg << "generate_type1_message: AcquireCredentialsHandle: " << generate_error_msg(result);
+			Nan::ThrowError(msg.str().c_str());
 			return;
 		}
 
@@ -169,7 +170,9 @@ namespace node_sspi_win32
 		}
 		else if (result != SEC_E_OK && result != SEC_I_CONTINUE_NEEDED)
 		{
-			isolate->ThrowException(String::NewFromUtf8(isolate, "Can initialize context"));
+			stringstream msg;
+			msg << "generate_type1_message: InitializeSecurityContext: " << generate_error_msg(result);
+			Nan::ThrowError(msg.str().c_str());
 			return;
 		}
 		auto buffer = Nan::NewBuffer((char*)&output_token[0], type_1_buf.cbBuffer);
@@ -238,7 +241,9 @@ namespace node_sspi_win32
 			&attrs, &expiry);
 		if (status != SEC_E_OK)
 		{
-			Nan::ThrowError(generate_error_msg(status));
+			stringstream msg;
+			msg << "generate_type3_message: InitializeSecurityContext: " << generate_error_msg(status);
+			Nan::ThrowError(msg.str().c_str());
 			return;
 		}
 		auto buffer = Nan::NewBuffer((char*)&output_token[0], type_3_buf.cbBuffer);
@@ -256,11 +261,11 @@ namespace node_sspi_win32
 	{
 		node::AtExit(exit);
 		init_sspi();
-		NODE_SET_METHOD(exports, "generate_type1_message", generate_type1_message);
+		exports->Set(Nan::New("generate_type1_message").ToLocalChecked(),
+			Nan::New<v8::FunctionTemplate>(generate_type1_message)->GetFunction());
 		exports->Set(Nan::New("generate_type3_message").ToLocalChecked(),
 			Nan::New<v8::FunctionTemplate>(generate_type3_message)->GetFunction());
 	}
-
 
 	NODE_MODULE(addon, init);
 
