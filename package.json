@@ -16,6 +16,8 @@
     "xmldom": "^0.1.27",
     "xpath": "0.0.23"
   },
-  "publishConfig": {
+  "publishConfig": {},
+  "dependencies": {
+    "nan": "^2.8.0"
   }
 }

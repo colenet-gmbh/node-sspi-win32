@@ -1,10 +1,9 @@
 // hello.js
-const amisxml = require('./build/Release/node-amisxml');
+const sspi = require('./build/Release/node-sspi-win32');
 var xpath = require('xpath')
   , dom = require('xmldom').DOMParser
 
-const params = {
-  "PerId": "4F47ACC8F02B4F7BA9FBF6E7050E810C", // Süß Ute on SchulungsDB
-};
-xml = amisxml.get_service_object("AmisXML.CO_Anwender2SammelNrAsJWS001", {"OhneDTD": "true"});
-console.log("xml", xml);
+buffer = sspi.generate_type1_message()
+console.log(buffer.toString('base64'));
+buffer = Buffer.from("test");
+buffer = sspi.generate_type3_message(buffer, buffer.length)
